@@ -10,18 +10,18 @@ import UIKit
 import Accounts
 import Social
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
 
     var accountStore = ACAccountStore()
     var twitterAcount: ACAccount?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.twitterAccounts { [weak self] (accounts) in
+
+        twitterAccounts { [weak self] (accounts) in
             guard let weakSelf = self else { return }
             print("\(accounts.description)")
-            
+
             if accounts.count == 1 {
                 // アカウントが1つしかない場合
                 weakSelf.twitterAcount = accounts[0]
@@ -31,17 +31,17 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     //MARK:- setup
-    
+
     /// 端末に登録されているTwitterアカウントの情報を取得する
     private func twitterAccounts(callback: @escaping ([ACAccount]) -> Void) {
         let accountType = accountStore.accountType(withAccountTypeIdentifier: ACAccountTypeIdentifierTwitter)
-        
+
         // Twitterアカウントの利用要求
         accountStore.requestAccessToAccounts(with: accountType, options: nil) { [weak self] (granted, error) in
             guard let weakSelf = self else { return }
-            
+
             if let error = error {
                 print("\(error.localizedDescription)")
                 return
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
             guard let accounts = weakSelf.accountStore.accounts(with: accountType) as? [ACAccount] else {
                 return
             }
-            
+
             if accounts.count == 0 {
                 print("Twitterアカウントが端末に登録されていません。\n設定アプリからアカウントを設定してください")
                 return
@@ -76,18 +76,18 @@ class ViewController: UIViewController {
                                                         weakSelf.twitterAcount = account
             }))
         }
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true)
     }
-    
+
     //MARK:- request
-    
+
     /// 画像をアップロードする
-    private func uploadImage(with account: ACAccount, image: UIImage, completion: @escaping (String?,Error?) -> Void) {
-        let request = SLRequest.init(forServiceType: SLServiceTypeTwitter,
-                                     requestMethod: .POST,
-                                     url: URL.init(string: "https://upload.twitter.com/1.1/media/upload.json"),
-                                     parameters: nil)
-        
+    private func uploadImage(with account: ACAccount, image: UIImage, completion: @escaping (String?, Error?) -> Void) {
+        let request = SLRequest(forServiceType: SLServiceTypeTwitter,
+                                requestMethod: .POST,
+                                url: URL(string: "https://upload.twitter.com/1.1/media/upload.json"),
+                                parameters: nil)
+
         request?.addMultipartData(UIImageJPEGRepresentation(image, 1.0),
                                   withName: "media",
                                   type: "image/jpeg",
@@ -102,7 +102,7 @@ class ViewController: UIViewController {
                 completion(nil, error)
                 return
             }
-            
+
             let json: Dictionary<String, Any>?
             do {
                 json = try JSONSerialization.jsonObject(with: responseData, options: [.mutableContainers]) as? Dictionary
@@ -110,14 +110,13 @@ class ViewController: UIViewController {
                 completion(nil, error)
                 return
             }
-            
+
             if let mediaIdString = json?["media_id_string"] as? String {
                 completion(mediaIdString, nil)
             }
         })
     }
-    
-    
+
     /// ツイートする
     ///
     /// - Parameters:
@@ -135,12 +134,11 @@ class ViewController: UIViewController {
             // 画像なしの場合
             params = ["status": message]
         }
-        
-        
-        let request = SLRequest.init(forServiceType: SLServiceTypeTwitter,
-                                     requestMethod: .POST,
-                                     url: URL.init(string: "https://api.twitter.com/1.1/statuses/update.json"),
-                                     parameters: params)
+
+        let request = SLRequest(forServiceType: SLServiceTypeTwitter,
+                                requestMethod: .POST,
+                                url: URL(string: "https://api.twitter.com/1.1/statuses/update.json"),
+                                parameters: params)
         request?.account = account
         request?.perform(handler: { (responseData, urlResponse, error) in
             DispatchQueue.global(qos: .default).async {
@@ -148,30 +146,30 @@ class ViewController: UIViewController {
             }
         })
     }
-    
+
     //MARK:- showAlert
-    
+
     /// 画像付きでツイートするアラート
     private func imageTweetAlert(with account: ACAccount) {
-        
-        let titleString = String.init(format: "@%@", account.username)
-        
+
+        let titleString = String(format: "@%@", account.username)
+
         let alertController = UIAlertController(title: titleString,
                                                 message: "Please enter your message",
                                                 preferredStyle: .alert)
-        
+
         //textfiledの追加
         alertController.addTextField(configurationHandler: nil)
         
         let tweetAction = UIAlertAction(title: "Tweet with images", style: .default, handler: { [weak self] (action) in
             guard let weakSelf = self else { return }
-            
+
             let message = alertController.textFields?[0].text ?? "test tweet from ios"
-            
+
             // テスト用の画像付きでツイートする
             weakSelf.uploadImage(with: account, image: #imageLiteral(resourceName: "image.jpeg")) { (mediaIdString, error) in
-                print("mediaIdString:\(mediaIdString)")
-                
+                print("mediaIdString:\(mediaIdString!)")
+
                 weakSelf.post(with: account,
                               message: message,
                               mediaIdString: mediaIdString,
@@ -185,11 +183,11 @@ class ViewController: UIViewController {
             }
         })
         alertController.addAction(tweetAction)
-        
+
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+
+        present(alertController, animated: true)
     }
     
     /// 画像無しでツイートするアラート
@@ -221,23 +219,22 @@ class ViewController: UIViewController {
             })
         })
         alertController.addAction(tweetAction)
-        
+
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+
+        present(alertController, animated: true)
     }
-    
+
     //MARK:- IBAction
 
     @IBAction func tappedTwitter(_ sender: Any) {
         guard let twitterAcount = twitterAcount else { return }
-        
+
         // サンプル画像付きでツイートする場合
-        //        self.imageTweetAlert(with: twitterAcount)
+        //        imageTweetAlert(with: twitterAcount)
         
         // サンプル画像無しでツイートする場合
-        self.tweetAlert(with: twitterAcount)
+        tweetAlert(with: twitterAcount)
     }
 }
-
