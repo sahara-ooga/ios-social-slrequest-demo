@@ -1,6 +1,6 @@
 # SLRequest
 ## 概要
-SLRequestは、TwitterやFacebookなどを利用するためにユーザのSNSのアカウント情報を取得したり、<br>SNSに投稿するためのHTTPリクエストをするクラスです。
+`SLRequest`は、TwitterやFacebookなどを利用するためにユーザのSNSのアカウント情報を取得したり、<br>SNSに投稿するためのHTTPリクエストをするクラスです。
 
 ## 関連クラス
 NSObject
@@ -13,23 +13,23 @@ NSObject
 
 |イニシャライザ|説明|サンプル|
 |---|---|---|
-|init(forServiceType:requestMethod:url:parameters:)| リクエストオブジェクトを生成する| SLRequest.init(forServiceType: SLServiceTypeTwitter, requestMethod: .POST, url: requestUrl, parameters: params) |
+|`init(forServiceType:requestMethod:url:parameters:)`| リクエストオブジェクトを生成する| `SLRequest.init(forServiceType: SLServiceTypeTwitter,`<br>` requestMethod: .POST, url: requestUrl,`<br>` parameters: params)` |
 
 ## 主要プロパティ
 
 |プロパティ名|説明|サンプル|
 |---|---|---|
-|account | リクエストを認証するために使用するアカウント情報 | slRequest.account |
-|requestMethod | リクエストに使用するメソッド | slRequest.requestMethod |
-|url | リクエストの宛先URL | slRequest.url |
-|parameters | リクエストのパラメータ | slRequest.parameters |
+|`account` | リクエストを認証するために使用するアカウント情報 | `slRequest.account` |
+| `requestMethod` | リクエストに使用するメソッド | `slRequest.requestMethod` |
+| `url` | リクエストの宛先URL | `slRequest.url` |
+|`var parameters: [AnyHashable : Any]! { get }` | リクエストのパラメータ | `slRequest.parameters` |
 
 ## 主要メソッド
 
 |メソッド名|説明|サンプル|
 |---|---|---|
-|addMultipartData<br>(_:withName:type:filename:) | リクエストのbodyにデータを追加する | slRequest.addMultipartData<br>(UIImageJPEGRepresentation(image, 1.0),<br>withName: "media",<br>type: "image/jpeg",<br>filename: "image.jpeg") |
-|perform(handler:) | 非同期要求を実行し、<br>完了したら指定ハンドラを呼び出す| slRequest.perform(handler: { (data, urlResponse, error) in<br>    DispatchQueue.global(qos: .default).async {<br>        completion(error)<br>    }    <br>}) |
+|`addMultipartData`<br>`(_:withName:type:filename:)` | リクエストの`body`にデータを追加する | `slRequest.addMultipartData`<br>`(UIImageJPEGRepresentation(image, 1.0),`<br>`withName: "media",`<br>`type: "image/jpeg",`<br>`filename: "image.jpeg")` |
+| `perform(handler:)` | 非同期要求を実行し、<br>完了したら指定ハンドラを呼び出す| `slRequest.perform(handler: { (data, urlResponse, error) in`<br>`DispatchQueue.global(qos: .default).async {`<br>`completion(error)`<br>`    }    `<br>`})` |
 
 ## フレームワーク
 Social.framework
