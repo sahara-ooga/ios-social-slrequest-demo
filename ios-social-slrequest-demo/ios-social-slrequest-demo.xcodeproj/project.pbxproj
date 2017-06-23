@@ -417,6 +417,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PCCZJUYRT6;
 				INFOPLIST_FILE = "ios-social-slrequest-demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.st-ventures.ios-social-slrequest-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -430,6 +431,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PCCZJUYRT6;
 				INFOPLIST_FILE = "ios-social-slrequest-demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.st-ventures.ios-social-slrequest-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -514,6 +516,7 @@
 				B6A5C5FA1E6DCBE000285BDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B6A5C5FB1E6DCBE000285BDA /* Build configuration list for PBXNativeTarget "ios-social-slrequest-demoTests" */ = {
 			isa = XCConfigurationList;
@@ -522,6 +525,7 @@
 				B6A5C5FD1E6DCBE000285BDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B6A5C5FE1E6DCBE000285BDA /* Build configuration list for PBXNativeTarget "ios-social-slrequest-demoUITests" */ = {
 			isa = XCConfigurationList;
@@ -530,6 +534,7 @@
 				B6A5C6001E6DCBE000285BDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

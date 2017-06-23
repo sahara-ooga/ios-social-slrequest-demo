@@ -82,7 +82,9 @@ final class ViewController: UIViewController {
     //MARK:- request
 
     /// 画像をアップロードする
-    private func uploadImage(with account: ACAccount, image: UIImage, completion: @escaping (String?, Error?) -> Void) {
+    private func uploadImage(with account: ACAccount,
+                             image: UIImage,
+                             completion: @escaping (String?, Error?) -> Void) {
         let request = SLRequest(forServiceType: SLServiceTypeTwitter,
                                 requestMethod: .POST,
                                 url: URL(string: "https://upload.twitter.com/1.1/media/upload.json"),
