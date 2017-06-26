@@ -107,7 +107,8 @@ final class ViewController: UIViewController {
 
             let json: Dictionary<String, Any>?
             do {
-                json = try JSONSerialization.jsonObject(with: responseData, options: [.mutableContainers]) as? Dictionary
+                json = try JSONSerialization.jsonObject(with: responseData,
+                                                        options: [.mutableContainers]) as? Dictionary
             } catch {
                 completion(nil, error)
                 return
@@ -124,9 +125,12 @@ final class ViewController: UIViewController {
     /// - Parameters:
     ///   - account: Twitterアカウント
     ///   - message: 投稿する文字列
-    ///   - mediaIdString: 画像を投稿する場合のid(画像無しの場合はnilをセット)
+    ///   - mediaIdString: 画像を投稿する場合のid(画像無しの場合はnilをセット).画像をアップロードした際のレスポンスjsonに含まれている
     ///   - completion: completion
-    private func post(with account: ACAccount, message: String, mediaIdString: String?, completion: @escaping (Error?) -> Void) {
+    private func post(with account: ACAccount,
+                      message: String,
+                      mediaIdString: String?,
+                      completion: @escaping (Error?) -> Void) {
         
         let params: Dictionary<String, Any>
         if let mediaIdString = mediaIdString {
@@ -141,6 +145,7 @@ final class ViewController: UIViewController {
                                 requestMethod: .POST,
                                 url: URL(string: "https://api.twitter.com/1.1/statuses/update.json"),
                                 parameters: params)
+        
         request?.account = account
         request?.perform(handler: { (responseData, urlResponse, error) in
             DispatchQueue.global(qos: .default).async {
@@ -160,16 +165,18 @@ final class ViewController: UIViewController {
                                                 message: "Please enter your message",
                                                 preferredStyle: .alert)
 
-        //textfiledの追加
+        //textfieldの追加
         alertController.addTextField(configurationHandler: nil)
         
-        let tweetAction = UIAlertAction(title: "Tweet with images", style: .default, handler: { [weak self] (action) in
+        let tweetAction = UIAlertAction(title: "Tweet with images",
+                                        style: .default,
+                                        handler: { [weak self] (action) in
             guard let weakSelf = self else { return }
 
             let message = alertController.textFields?[0].text ?? "test tweet from ios"
 
             // テスト用の画像付きでツイートする
-            weakSelf.uploadImage(with: account, image: #imageLiteral(resourceName: "image.jpeg")) { (mediaIdString, error) in
+            weakSelf.uploadImage(with: account, image: #imageLiteral(resourceName: "twitter")) { (mediaIdString, error) in
                 print("mediaIdString:\(mediaIdString!)")
 
                 weakSelf.post(with: account,
@@ -184,9 +191,13 @@ final class ViewController: UIViewController {
                 })
             }
         })
+        
         alertController.addAction(tweetAction)
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel",
+                                         style: .cancel,
+                                         handler: nil)
+        
         alertController.addAction(cancelAction)
 
         present(alertController, animated: true)
@@ -204,7 +215,10 @@ final class ViewController: UIViewController {
         //textfiledの追加
         alertController.addTextField(configurationHandler: nil)
         
-        let tweetAction = UIAlertAction(title: "Tweet", style: .default, handler: { [weak self] (action) in
+        let tweetAction = UIAlertAction(title: "Tweet",
+                                        style: .default,
+                                        handler: { [weak self] (action) in
+                                            
             guard let weakSelf = self else { return }
             
             let message = alertController.textFields?[0].text ?? "test tweet from ios"
@@ -234,9 +248,9 @@ final class ViewController: UIViewController {
         guard let twitterAcount = twitterAcount else { return }
 
         // サンプル画像付きでツイートする場合
-        //        imageTweetAlert(with: twitterAcount)
+                imageTweetAlert(with: twitterAcount)
         
         // サンプル画像無しでツイートする場合
-        tweetAlert(with: twitterAcount)
+        //tweetAlert(with: twitterAcount)
     }
 }
